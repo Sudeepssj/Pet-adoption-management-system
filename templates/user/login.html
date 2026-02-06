@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -22,7 +22,13 @@
         {% csrf_token %}
         <!-- Email -->
         <div class="input-group">
-          <input type="text" id="email" placeholder="Email" name="username" />
+          <input
+            type="text"
+            id="email"
+            placeholder="Email"
+            name="username"
+            required
+          />
         </div>
         <p id="emailError" class="error"></p>
 
@@ -33,6 +39,7 @@
             id="password"
             placeholder="Password"
             name="password"
+            required
           />
           <span class="toggle-password" id="togglePassword">
             <i class="fa-solid fa-eye"></i>

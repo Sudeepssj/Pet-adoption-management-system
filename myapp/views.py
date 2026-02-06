@@ -1,4 +1,5 @@
 from datetime import datetime
+from multiprocessing import context
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.core.files.storage import FileSystemStorage
@@ -13,16 +14,21 @@ from django.contrib.auth.decorators import login_required
 # admin dashboard get method
 @login_required(login_url='/myapp/login_get/')
 def admin_dashboard_get(request):
-    total_shops = Shop_signup_table.objects.count()
-    total_users = User_signup_table.objects.count()
-    pending_complaints = User_complaint_table.objects.filter(Reply="no reply").count()
-    
-    context = {
-        'total_shops': total_shops,
-        'total_users': total_users,
-        'pending_complaints': pending_complaints,
-    }
-    return render(request,"admin/admin_dashboard.html", context)
+    user=request.user
+    if user.groups.filter(name="admin").exists():
+        total_shops = Shop_signup_table.objects.count()
+        total_users = User_signup_table.objects.count()
+        pending_complaints = User_complaint_table.objects.filter(Reply="no reply").count()
+        
+        context = {
+            'total_shops': total_shops,
+            'total_users': total_users,
+            'pending_complaints': pending_complaints,
+        }
+        return render(request,"admin/admin_dashboard.html", context)
+    else:
+        return redirect('/myapp/login_get/')
+    # return render(request,"admin/admin_dashboard.html", context)
 
 # homepage get method
 @login_required
@@ -73,22 +79,35 @@ def change_pass_get(request):
 # pet.html get method
 @login_required
 def pet_get(request):
-    return render(request,"user/pet.html")
-
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        return render(request,"user/pet.html")
+    else:
+        return redirect('/myapp/login_get/')
 # pet_details.html get method
 @login_required
 def pet_details_get(request):
-    return render(request,"shop/pet_details.html")
-
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        return render(request,"user/pet_details.html")
+    else:
+        return redirect('/myapp/login_get/')
 # edit_pet.html get method
 @login_required
 def edit_pet_get(request):
-    return render(request,"shop/edit_pet.html")
-
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        return render(request,"user/edit_pet.html")
+    else:
+        return redirect('/myapp/login_get/')
 # user Dashboard get method
 @login_required(login_url='/myapp/login_get/')
 def user_dashboard_get(request):
-    return render(request,"user/dashboard.html")
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        return render(request,"user/dashboard.html")
+    else:
+        return redirect('/myapp/login_get/')    
 
 # shop signup registration page get method
 
@@ -170,13 +189,21 @@ def user_signup_get(request):
 # shop dashboard get method
 @login_required(login_url='/myapp/login_get/')
 def shop_dashboard_get(request):
-    return render(request,"shop/shop_dashboard.html")
-
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        return render(request,"shop/shop_dashboard.html")
+    else:
+        return redirect('/myapp/login_get/')
 # shop view pets get method
 @login_required     
 def shop_view_pets_get(request):
-    pets = pet.objects.filter(shop__LOGIN_id=request.user.id)
-    return render(request, "shop/view_pet.html", {"pets": pets})
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        pets = pet.objects.filter(shop__LOGIN_id=request.user.id)
+        return render(request, "shop/view_pet.html", {"pets": pets})
+    else:
+        return redirect('/myapp/login_get/')
+   
 
 # add pet post method
 @login_required
@@ -209,14 +236,25 @@ def add_pet_post(request):
 # add pet get method
 @login_required
 def add_pet_get(request):
-    return render(request, "shop/add_pet.html")
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        return render(request, "shop/add_pet.html")
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # edit pet get method
 @login_required
 def edit_pet_get(request, pet_id):
-    request.session['pet_id'] = pet_id
-    p = pet.objects.get(id=pet_id)
-    return render(request, "shop/edit_pet.html", {"pet": p})
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        request.session['pet_id'] = pet_id
+        p = pet.objects.get(id=pet_id)
+        return render(request, "shop/edit_pet.html", {"pet": p})
+    else:
+        return redirect('/myapp/login_get/')
+    
+    
 
 # edit pet post method
 @login_required
@@ -243,21 +281,36 @@ def edit_pet_post(request):
 # pet delete get method
 @login_required
 def pet_delete_get(request, pet_id):
-    p=pet.objects.get(id=pet_id)
-    p.delete()
-    return redirect('/myapp/shop_view_pets_get/')
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        p=pet.objects.get(id=pet_id)
+        p.delete()
+        return redirect('/myapp/shop_view_pets_get/')
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # shop profile get 
 @login_required
 def shop_profile_get(request):
-    shop = Shop_signup_table.objects.get(LOGIN=request.user)
-    return render(request, "shop/shop_profile.html", {"shop": shop})
-
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        shop = Shop_signup_table.objects.get(LOGIN=request.user)
+        return render(request, "shop/shop_profile.html", {"shop": shop})
+    else:
+        return redirect('/myapp/login_get/')
+    
 # shop edit profile get method
 @login_required
 def shop_edit_profile_get(request):
-    shop = Shop_signup_table.objects.get(LOGIN=request.user)
-    return render(request, "shop/shop_edit_profile.html", {"shop": shop})
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        shop = Shop_signup_table.objects.get(LOGIN=request.user)
+        return render(request, "shop/shop_edit_profile.html", {"shop": shop})
+    else:
+        return redirect('/myapp/login_get/')
+    
+    
 
 
 # shop edit profile post method
@@ -324,14 +377,24 @@ def shop_edit_profile_post(request):
 # user profile get method
 @login_required
 def my_profile_get(request):
-    user_profile = User_signup_table.objects.get(LOGIN=request.user)
-    return render(request, "user/my_profile.html", {"user_data": user_profile})
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        user_profile = User_signup_table.objects.get(LOGIN=request.user)
+        return render(request, "user/my_profile.html", {"user_data": user_profile})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # user edit profile get method
 @login_required
 def my_edit_profile_get(request):
-    user_data = User_signup_table.objects.get(LOGIN=request.user)
-    return render(request, "user/my_edit_profile.html", {"user_data": user_data})
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        user_data = User_signup_table.objects.get(LOGIN=request.user)
+        return render(request, "user/my_edit_profile.html", {"user_data": user_data})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # user edit profile post method
 @login_required
@@ -359,14 +422,24 @@ def my_edit_profile_post(request):
 # user view pets get method
 @login_required
 def user_view_pets_get(request):
-    # print(request.user.groups.name)
-    pets = pet.objects.all()
-    return render(request, "user/user_view_pets_table.html", {"pets": pets})    
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        pets = pet.objects.all()
+        return render(request, "user/user_view_pets_table.html", {"pets": pets})
+    else:
+        return redirect('/myapp/login_get/')
+    
+        
 
 # shop add product get method
 @login_required
 def shop_add_product_get(request):
-    return render(request, "shop/add_product.html")
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        return render(request, "shop/add_product.html")
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # shop add product post method
 @login_required
@@ -396,16 +469,26 @@ def shop_add_product_post(request):
 
 # shop view products get method
 @login_required
-def shop_view_products_get(request):    
-    products = Product_table.objects.filter(SHOP__LOGIN_id=request.user.id)
-    return render(request, "shop/view_product.html", {"products": products})
+def shop_view_products_get(request):
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        products = Product_table.objects.filter(SHOP__LOGIN_id=request.user.id)
+        return render(request, "shop/view_product.html", {"products": products})
+    else:
+        return redirect('/myapp/login_get/')    
+    
 
 # edit product get method
 @login_required
 def edit_product_get(request, product_id):
-    request.session['product_id'] = product_id
-    p = Product_table.objects.get(id=product_id)
-    return render(request, "shop/edit_product.html", {"product": p})
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        request.session['product_id'] = product_id
+        p = Product_table.objects.get(id=product_id)
+        return render(request, "shop/edit_product.html", {"product": p})
+    else:
+        return redirect('/myapp/login_get/') 
+    
 
 # edit product post method
 @login_required
@@ -431,21 +514,36 @@ def edit_product_post(request):
 # delete product get method
 @login_required
 def delete_product(request, product_id):
-    p = Product_table.objects.get(id=product_id)
-    p.delete()
-    return redirect('/myapp/shop_view_products_get/')
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        p = Product_table.objects.get(id=product_id)
+        p.delete()
+        return redirect('/myapp/shop_view_products_get/')
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # user view product details get method
 @login_required
 def user_view_product_get(request):
-    product = Product_table.objects.all()
-    return render(request, "user/user_view_product.html", {"products": product})
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        product = Product_table.objects.all()
+        return render(request, "user/user_view_product.html", {"products": product})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # product quantity get method
 @login_required
 def product_quantity_get(request,id):
-    request.session['product_id']=id
-    return render(request, "user/product_quantity.html")
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        request.session['product_id']=id
+        return render(request, "user/product_quantity.html")
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # add to cart post method
 @login_required
@@ -487,85 +585,121 @@ def add_product_to_cart_post(request):
 # view cart get method
 @login_required
 def view_cart_get(request): 
-    cart_items = Cart_table.objects.filter(USER__id=request.user.id)
-    tot=sum(cart_items.Total_amount for cart_items in cart_items)
-    return render(request, "user/view_cart.html", {"cart_items": cart_items,"total_amount":tot})
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        cart_items = Cart_table.objects.filter(USER__id=request.user.id)
+        tot=sum(cart_items.Total_amount for cart_items in cart_items)
+        return render(request, "user/view_cart.html", {"cart_items": cart_items,"total_amount":tot})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # order main get method
 @login_required
 def order_main_get(request,id):
-    cart_item = Cart_table.objects.get(id=id)
-    order = Order_table_main()
-    print(cart_item)
-    order.USER = cart_item.USER
-    order.Status = "pending"
-    order.Date = datetime.today()
-    order.Amount = cart_item.Total_amount
-    order.save()
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        cart_item = Cart_table.objects.get(id=id)
+        order = Order_table_main()
+        print(cart_item)
+        order.USER = cart_item.USER
+        order.Status = "pending"
+        order.Date = datetime.today()
+        order.Amount = cart_item.Total_amount
+        order.save()
 
-    order_sub = Order_table_sub()
-    order_sub.PRODUCT = cart_item.PRODUCT
-    order_sub.Quantity = cart_item.Quantity
-    order_sub.Status = "pending"
-    order_sub.ORDER = order
-    order_sub.save()
-
-
-    cart_item.delete()
-
+        order_sub = Order_table_sub()
+        order_sub.PRODUCT = cart_item.PRODUCT
+        order_sub.Quantity = cart_item.Quantity
+        order_sub.Status = "pending"
+        order_sub.ORDER = order
+        order_sub.save()
 
 
-    return HttpResponse("Order placed successfully!")
+        cart_item.delete()
+
+
+
+        return HttpResponse("Order placed successfully!")
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # order sub get method
 @login_required
 def order_sub_get(request):
-    cart_items = Cart_table.objects.filter(USER__id=request.user.id)
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        cart_items = Cart_table.objects.filter(USER__id=request.user.id)
     order = Order_table_sub()
     for item in cart_items:
         order.PRODUCT = item.PRODUCT
         order.Quantity = item.Quantity
         order.Status = "pending"
         order.save()
-    return HttpResponse("All Order placed successfully!")
+        item.delete()
+        return HttpResponse("All Order placed successfully!")
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # order status main get method
 @login_required
 def order_main_status_get(request):
-    orders = Order_table_main.objects.filter(USER__id=request.user.id)
-    return render(request, "user/order_status.html", {"orders": orders})
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        orders = Order_table_main.objects.filter(USER__id=request.user.id)
+        return render(request, "user/order_status.html", {"orders": orders})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # order status main search post method
 @login_required
 def order_main_status_search_post(request):
-    status = request.POST['search']
-    orders = Order_table_main.objects.filter(USER__id=request.user.id, Date__icontains=status)
-    return render(request, "user/order_status.html", {"orders": orders})
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        status = request.POST['search']
+        orders = Order_table_main.objects.filter(USER__id=request.user.id, Date__icontains=status)
+        return render(request, "user/order_status.html", {"orders": orders})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # shop order status main get method
 @login_required
 def shop_view_order_status_get(request):
-    orders = Order_table_main.objects.all().order_by('-Date')
-    return render(
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        orders = Order_table_main.objects.all().order_by('-Date')
+        return render(
         request,
         "shop/view_order_main.html",
         {"orders": orders}
     )
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # shop order status sub search get method
 @login_required
 def shop_view_order_sub_status_get(request, id):
-    order = Order_table_main.objects.get(id=id)   # ✅ FETCH MAIN ORDER
-    order_items = Order_table_sub.objects.filter(ORDER__id=id)
+    user=request.user
+    if user.groups.filter(name="shop").exists():
+        order = Order_table_main.objects.get(id=id)   # ✅ FETCH MAIN ORDER
+        order_items = Order_table_sub.objects.filter(ORDER__id=id)
 
-    return render(
-        request,
-        "shop/view_order_sub.html",
-        {
-            "order": order,            # ✅ PASS ORDER
-            "order_items": order_items
-        }
-    )
+        return render(
+            request,
+            "shop/view_order_sub.html",
+            {
+                "order": order,            # ✅ PASS ORDER
+                "order_items": order_items
+            }
+        )
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 
 # pet search in category post method
@@ -578,49 +712,68 @@ def shop_view_order_sub_status_get(request, id):
 # order sub status get method
 @login_required
 def order_sub_status_get(request,id):
-    order_items = Order_table_sub.objects.filter(ORDER__id=id)
-    return render(request, "user/order_sub.html", {"order_items": order_items})
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        order_items = Order_table_sub.objects.filter(ORDER__id=id)
+        return render(request, "user/order_sub.html", {"order_items": order_items})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # order all get method
 @login_required
 def order_all_get(request):
-    cart_items = Cart_table.objects.filter(USER__id=request.user.id)
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        cart_items = Cart_table.objects.filter(USER__id=request.user.id)
 
 
-    order = Order_table_main()
+        order = Order_table_main()
 
 
-    total_amount = sum(item.Total_amount for item in cart_items)
+        total_amount = sum(item.Total_amount for item in cart_items)
 
 
-    order.USER = User.objects.get(id=request.user.id)
-    order.Status = "orderd"
-    order.Date = datetime.today()
-    order.Amount = total_amount
-    order.save()
+        order.USER = User.objects.get(id=request.user.id)
+        order.Status = "orderd"
+        order.Date = datetime.today()
+        order.Amount = total_amount
+        order.save()
 
-    for item in cart_items:
-        order_sub = Order_table_sub()
-        order_sub.PRODUCT = item.PRODUCT
-        order_sub.Quantity = item.Quantity
-        order_sub.Status = "orderd"
-        order_sub.ORDER = order
-        order_sub.save()
-        item.delete()
+        for item in cart_items:
+            order_sub = Order_table_sub()
+            order_sub.PRODUCT = item.PRODUCT
+            order_sub.Quantity = item.Quantity
+            order_sub.Status = "orderd"
+            order_sub.ORDER = order
+            order_sub.save()
+            item.delete()
 
-    return HttpResponse("All Orders placed successfully!")
+        return HttpResponse("All Orders placed successfully!")
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # user complaint get method
 @login_required
 def user_complaint_get(request):
-    complaints = User_complaint_table.objects.filter(USER=request.user)
-    return render(request,"user/user_complaints.html",{"complaints": complaints}
-    )
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        complaints = User_complaint_table.objects.filter(USER=request.user)
+        return render(request,"user/user_complaints.html",{"complaints": complaints})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # user send complaint get method
 @login_required
 def user_send_complaint_get(request):
-    return render(request, "user/send_complaints.html")
+    user=request.user
+    if user.groups.filter(name="user").exists():
+        return render(request, "user/send_complaints.html")
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # user send complaint post method
 @login_required
@@ -644,24 +797,30 @@ def user_send_complaint_post(request):
 # admin view complaints get method
 @login_required
 def admin_view_complaints_get(request):
-    complaints = User_complaint_table.objects.all().order_by('-Date')
-    return render(
-        request,
-        "admin/view_complaints.html",
-        {"complaints": complaints}
-    )
+    user=request.user
+    if user.groups.filter(name="admin").exists():
+        complaints = User_complaint_table.objects.all().order_by('-Date')
+        return render(request,"admin/view_complaints.html",{"complaints": complaints})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # admin reply get method
 @login_required
 def admin_reply_get(request, id):
-    print(id,"llllllllllllllllllllllllll")
-    request.session['cid']=id
+    user=request.user
+    if user.groups.filter(name="admin").exists():
+        print(id,"llllllllllllllllllllllllll")
+        request.session['cid']=id
 
-    complaint = User_complaint_table.objects.get(id=id)
+        complaint = User_complaint_table.objects.get(id=id)
 
-    print(complaint.Complaint,"kkkkkkkkkkkkkkkkkkkkkkkkk")
+        print(complaint.Complaint,"kkkkkkkkkkkkkkkkkkkkkkkkk")
 
-    return render(request, "admin/reply_complaint.html") 
+        return render(request, "admin/reply_complaint.html", {"complaint": complaint})
+    else:
+        return redirect('/myapp/login_get/')
+     
 
 # admin reply post method
 @login_required
@@ -679,90 +838,102 @@ def admin_reply_post(request):
 # shop view all users get method
 @login_required  
 def admin_view_shops_get(request):
-    shops = Shop_signup_table.objects.all()
+    user=request.user
+    if user.groups.filter(name="admin").exists():
+        shops = Shop_signup_table.objects.all()
 
-    shop_list = []
+        shop_list = []
 
-    for shop in shops:
-        pet_count = pet.objects.filter(shop=shop).count()
+        for shop in shops:
+            pet_count = pet.objects.filter(shop=shop).count()
 
-        product_count = Product_table.objects.filter(SHOP=shop).count()
+            product_count = Product_table.objects.filter(SHOP=shop).count()
 
-        order_count = Order_table_sub.objects.filter(
-            PRODUCT__SHOP=shop
-        ).count()
+            order_count = Order_table_sub.objects.filter(
+                PRODUCT__SHOP=shop
+            ).count()
 
-        shop_list.append({
-            "id": shop.id,
-            "shop_name": shop.shop_name,
-            "place": shop.place,
-            "phone_no": shop.phone_no,
-            "pet_count": pet_count,
-            "product_count": product_count,
-            "order_count": order_count,
-        })
+            shop_list.append({
+                "id": shop.id,
+                "shop_name": shop.shop_name,
+                "place": shop.place,
+                "phone_no": shop.phone_no,
+                "pet_count": pet_count,
+                "product_count": product_count,
+                "order_count": order_count,
+            })
 
-    return render(
-        request,
-        "admin/view_shops.html",
-        {"shops": shop_list}
-    )
+        return render(request,"admin/view_shops.html",{"shops": shop_list})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # admin view pets get method
 @login_required
 def admin_view_pets_get(request, shop_id):
-    shop = Shop_signup_table.objects.get(id=shop_id)
-    pets = pet.objects.filter(shop=shop)
+    user=request.user
+    if user.groups.filter(name="admin").exists():
+        shop = Shop_signup_table.objects.get(id=shop_id)
+        pets = pet.objects.filter(shop=shop)
 
-    return render(
-        request,
-        "admin/view_pets.html",
-        {
-            "shop": shop,
-            "pets": pets
-        }
-    )
+        return render(
+            request,
+            "admin/view_pets.html",
+            {
+                "shop": shop,
+                "pets": pets
+            }
+        )
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 
 # admin view products get method
 @login_required
 def admin_view_products_get(request, shop_id):
-    shop = Shop_signup_table.objects.get(id=shop_id)
-    products = Product_table.objects.filter(SHOP=shop)
+    user=request.user
+    if user.groups.filter(name="admin").exists():
+        shop = Shop_signup_table.objects.get(id=shop_id)
+        products = Product_table.objects.filter(SHOP=shop)
 
-    return render(
-        request,
-        "admin/view_products.html",
-        {
-            "shop": shop,
-            "products": products
-        }
-    )
+        return render(
+            request,
+            "admin/view_products.html",
+            {
+                "shop": shop,
+                "products": products
+            }
+        )
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 
 # admin shop view orders get method
 @login_required
 def admin_view_orders_get(request, shop_id):
-    shop = Shop_signup_table.objects.get(id=shop_id)
-
-    order_items = Order_table_sub.objects.filter(
-        PRODUCT__SHOP=shop
-    ).select_related('ORDER', 'PRODUCT', 'ORDER__USER').order_by('-ORDER__Date')
-
-    return render(
-        request,
-        "admin/view_orders.html",
-        {
-            "shop": shop,
-            "order_items": order_items
-        }
-    )
+    user=request.user
+    if user.groups.filter(name="admin").exists():
+        shop = Shop_signup_table.objects.get(id=shop_id)
+        order_items = Order_table_sub.objects.filter(
+            PRODUCT__SHOP=shop
+        ).select_related('ORDER', 'PRODUCT', 'ORDER__USER').order_by('-ORDER__Date')
+        return render(request,"admin/view_orders.html",{"shop": shop,"order_items": order_items})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 # super admin view users get method
 @login_required
 def admin_view_users_get(request):
-    users = User_signup_table.objects.all()
-    return render(request, "admin/view_users.html", {"users": users})
+    user=request.user
+    if user.groups.filter(name="admin").exists():
+        users = User_signup_table.objects.all()
+        return render(request,"admin/view_users.html",{"users": users})
+    else:
+        return redirect('/myapp/login_get/')
+    
 
 
 # logout

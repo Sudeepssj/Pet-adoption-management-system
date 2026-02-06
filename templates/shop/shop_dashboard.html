@@ -32,8 +32,10 @@
         <p>Welcome, {{ shop.owner_name }}</p>
       </header>
 
+      {% block body %}{% endblock %}
+
       <!-- STAT CARDS -->
-      <section class="stats">
+      <!-- <section class="stats">
         <div class="stat-card">
           <h2>{{ total_pets }}</h2>
           <p>Total Pets</p>
@@ -53,10 +55,10 @@
           <h2>{{ total_categories }}</h2>
           <p>Categories</p>
         </div>
-      </section>
+      </section> -->
 
       <!-- QUICK ACTIONS -->
-      <section class="quick-actions">
+      <!-- <section class="quick-actions">
         <h2 class="section-title">Quick Actions</h2>
 
         <div class="action-grid">
@@ -74,10 +76,10 @@
             >📦 View Orders</a
           >
         </div>
-      </section>
+      </section> -->
 
       <!-- PET LIST PREVIEW -->
-      <section class="section">
+      <!-- <section class="section">
         <h2 class="section-title">Recent Pets</h2>
 
         <div class="pet-list">
@@ -93,10 +95,10 @@
           <p>No pets added yet.</p>
           {% endfor %}
         </div>
-      </section>
+      </section> -->
 
       <!-- REQUESTS PREVIEW -->
-      <section class="section">
+      <!-- <section class="section">
         <h2 class="section-title">Recent Adoption Requests</h2>
 
         <div class="request-list">
@@ -110,7 +112,7 @@
           <p>No requests yet.</p>
           {% endfor %}
         </div>
-      </section>
+      </section> -->
     </main>
   </body>
 </html>
