@@ -1,49 +1,84 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>View Pets</title>
-  <link rel="stylesheet" href="/static/admin/view_pets.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>View Pets</title>
+    <link rel="stylesheet" href="/static/admin/view_pets.css" />
+  </head>
 
-<body>
-  <div class="container">
+  <body>
+    <div class="container">
+      <h1 class="title">🐾 Pets from {{ shop.shop_name }}</h1>
 
-    <h1 class="title">
-      🐾 Pets from {{ shop.shop_name }}
-    </h1>
+      <p class="subtitle">
+        Location: {{ shop.place }} | Phone: {{ shop.phone_no }}
+      </p>
 
-    <p class="subtitle">
-      Location: {{ shop.place }} | Phone: {{ shop.phone_no }}
-    </p>
-
-    <div class="pet-grid">
-      {% for p in pets %}
-      <div class="pet-card">
-
-        <img src="{{ p.photo.url }}" alt="{{ p.name }}">
-
-        <div class="pet-info">
-          <h3>{{ p.name }}</h3>
-
-          <p><strong>Breed:</strong> {{ p.breed }}</p>
-          <p><strong>Category:</strong> {{ p.category }}</p>
-          <p><strong>Age:</strong> {{ p.age }}</p>
-          <p><strong>Vaccinated:</strong> {{ p.vaccinated }}</p>
-
-          <p class="desc">{{ p.description }}</p>
-        </div>
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-box"
+          placeholder="Search by pet name, breed, or category..."
+          onchange="ddd()"
+        />
       </div>
-      {% empty %}
-      <p class="empty">No pets added by this shop.</p>
-      {% endfor %}
+
+      <div class="pet-grid" id="petGrid">
+        {% for p in pets %}
+        <div class="pet-card">
+          <img src="{{ p.photo.url }}" alt="{{ p.name }}" />
+
+          <div class="pet-info">
+            <h3>{{ p.name }}</h3>
+
+            <p><strong>Breed:</strong> {{ p.breed }}</p>
+            <p><strong>Category:</strong> {{ p.category }}</p>
+            <p><strong>Age:</strong> {{ p.age }}</p>
+            <p><strong>Vaccinated:</strong> {{ p.vaccinated }}</p>
+
+            <p class="desc">{{ p.description }}</p>
+          </div>
+        </div>
+        {% empty %}
+        <p class="empty">No pets added by this shop.</p>
+        {% endfor %}
+      
+      </div>
+      
+    <div class="btn_div">
+      <div class="btn_container">
+        <a href="/myapp/admin_view_shops_get/" class="back-btn">
+        ← Back to Shops
+      </a>
+      </div>
     </div>
 
-    <a href="/myapp/admin_view_shops_get/" class="back-btn">
-      ← Back to Shops
-    </a>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  </div>
-</body>
+    <script>
+      const ddd = () => {
+        var data = document.getElementById("searchInput").value;
+        console.log(data, "asdfghjkl;");
+      };
+
+      $(document).ready(function () {
+        $("#searchInput").on("keyup", function () {
+          var searchTerm = $(this).val().toLowerCase().trim();
+          console.log(searchTerm, "asdfghjkl;");
+
+          $(".pet-card").each(function () {
+            var petInfo = $(this).find(".pet-info").text().toLowerCase();
+
+            if (searchTerm === "" || petInfo.includes(searchTerm)) {
+              $(this).show();
+            } else {
+              $(this).hide();
+            }
+          });
+        });
+      });
+    </script>
+  </body>
 </html>

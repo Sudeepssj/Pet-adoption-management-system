@@ -611,6 +611,7 @@ def order_main_get(request,id):
         order_sub = Order_table_sub()
         order_sub.PRODUCT = cart_item.PRODUCT
         order_sub.Quantity = cart_item.Quantity
+        order_sub.Total_amount = cart_item.Total_amount
         order_sub.Status = "pending"
         order_sub.ORDER = order
         order_sub.save()
@@ -635,6 +636,7 @@ def order_sub_get(request):
     for item in cart_items:
         order.PRODUCT = item.PRODUCT
         order.Quantity = item.Quantity
+        order.Total_amount = item.Total_amount
         order.Status = "pending"
         order.save()
         item.delete()
@@ -744,6 +746,7 @@ def order_all_get(request):
             order_sub = Order_table_sub()
             order_sub.PRODUCT = item.PRODUCT
             order_sub.Quantity = item.Quantity
+            order_sub.Total_amount = item.Quantity * item.PRODUCT.Price
             order_sub.Status = "orderd"
             order_sub.ORDER = order
             order_sub.save()

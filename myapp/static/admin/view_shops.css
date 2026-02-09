@@ -124,7 +124,11 @@ body {
   color: #666;
 }
 
-
+ .btn-div{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+ }
 .back-dashboard {
   text-align: center;
   margin-top: 30px;
@@ -153,6 +157,20 @@ body {
   transform: translateY(0);
   box-shadow: 0 4px 10px rgba(46, 42, 123, 0.2);
 }
+.search-box {
+  margin: 20px auto;
+  text-align: center;
+}
+
+.search-box input {
+  width: 100%;
+  max-width: 420px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
 
 /* Mobile */
 @media (max-width: 600px) {

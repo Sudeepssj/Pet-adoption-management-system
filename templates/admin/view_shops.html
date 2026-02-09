@@ -7,24 +7,38 @@
     <title>Admin | View Shops</title>
 
     <link rel="stylesheet" href="/static/admin/view_shops.css" />
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   </head>
 
   <body>
     <div class="page-container">
       <h1 class="page-title">🏪 Registered Shops</h1>
 
-      <div class="shop-grid">
+      <!-- 🔍 SEARCH BOX -->
+      <div class="search-box">
+        <input
+          type="text"
+          id="shopSearch"
+          placeholder="Search by shop name, place, phone..."
+        />
+      </div>
+
+      <div class="shop-grid" id="shopGrid">
         {% for shop in shops %}
-        <div class="shop-card">
+        <div class="shop-card shop-item">
           <!-- SHOP HEADER -->
           <div class="shop-header">
-            <h2>{{ shop.shop_name }}</h2>
+            <h2 class="shop-name">{{ shop.shop_name }}</h2>
             <span class="shop-location">{{ shop.place }}</span>
           </div>
 
           <!-- SHOP DETAILS -->
           <div class="shop-details">
-            <p><strong>📞 Phone:</strong> {{ shop.phone_no }}</p>
+            <p class="shop-phone">
+              <strong>📞 Phone:</strong> {{ shop.phone_no }}
+            </p>
           </div>
 
           <!-- STATS -->
@@ -47,17 +61,21 @@
 
           <!-- ACTIONS -->
           <div class="shop-actions">
-            <a href="/myapp/admin_view_pets_get/{{ shop.id }}/" class="btn"
-              >View Pets</a
+            <a href="/myapp/admin_view_pets_get/{{ shop.id }}/" class="btn">
+              View Pets
+            </a>
+            <a
+              href="/myapp/admin_view_products_get/{{ shop.id }}/"
+              class="btn"
             >
-            <a href="/myapp/admin_view_products_get/{{ shop.id }}/" class="btn"
-              >View Products</a
-            >
+              View Products
+            </a>
             <a
               href="/myapp/admin_view_orders_get/{{ shop.id }}/"
               class="btn btn-outline"
-              >View Orders</a
             >
+              View Orders
+            </a>
           </div>
         </div>
         {% empty %}
@@ -65,12 +83,27 @@
         {% endfor %}
       </div>
     </div>
+    <div class="btn-div">
     <div class="back-dashboard">
-      <center>
         <p>
           <a href="/myapp/admin_dashboard_get/">Back to Dashboard</a>
         </p>
-      </center>
     </div>
+    </div>
+
+    <!-- ✅ jQuery SEARCH SCRIPT -->
+    <script>
+      $(document).ready(function () {
+        $("#shopSearch").on("keyup", function () {
+          const value = $(this).val().toLowerCase();
+
+          $(".shop-item").filter(function () {
+            $(this).toggle(
+              $(this).text().toLowerCase().indexOf(value) > -1
+            );
+          });
+        });
+      });
+    </script>
   </body>
 </html>

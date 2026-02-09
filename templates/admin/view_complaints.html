@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,7 +9,16 @@
   <body>
     <h2>All User Complaints</h2>
 
-    <table border="1" cellpadding="8" cellspacing="0">
+    <div class="search-container">
+      <input
+        type="text"
+        id="searchInput"
+        class="search-box"
+        placeholder="Search by User, Date, or Complaint..."
+      />
+    </div>
+
+    <table border="1" cellpadding="8" cellspacing="0" id="complaintsTable">
       <tr>
         <th>Sl No</th>
         <th>Date</th>
@@ -41,8 +50,28 @@
     </table>
 
     <div class="back-btn-container">
-      <a href="/myapp/admin_dashboard_get/" class="back-btn">Back to Dashboard</a>
+      <a href="/myapp/admin_dashboard_get/" class="back-btn"
+        >Back to Dashboard</a
+      >
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#searchInput").on("keyup", function () {
+          var searchTerm = $(this).val().toLowerCase();
+
+          $("#complaintsTable tr:not(:first)").each(function () {
+            var rowText = $(this).text().toLowerCase();
+
+            if (rowText.includes(searchTerm)) {
+              $(this).show();
+            } else {
+              $(this).hide();
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>

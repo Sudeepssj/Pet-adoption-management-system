@@ -75,6 +75,7 @@ class Order_table_main(models.Model):
 class Order_table_sub(models.Model):
     PRODUCT=models.ForeignKey(Product_table,on_delete=models.CASCADE)
     Quantity=models.IntegerField()
+    Total_amount=models.BigIntegerField(default=0)
     Status=models.CharField(max_length=20,default="pending")
     ORDER=models.ForeignKey(Order_table_main,on_delete=models.CASCADE)  # order_table_main
 

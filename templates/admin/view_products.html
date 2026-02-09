@@ -1,5 +1,5 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,6 +14,14 @@
       <p class="subtitle">
         Location: {{ shop.place }} | Phone: {{ shop.phone_no }}
       </p>
+
+      <div class="search-bar">
+        <input
+          type="text"
+          id="productSearch"
+          placeholder="Search products by name, type or details…"
+        />
+      </div>
 
       <div class="product-grid">
         {% for p in products %}
@@ -33,11 +41,60 @@
         {% empty %}
         <p class="empty">No products added by this shop.</p>
         {% endfor %}
-      </div>
 
+    </div>
+
+<div class="btn-cc">
+      <div class="btn-container">
       <a href="/myapp/admin_view_shops_get/" class="back-btn">
         ← Back to Shops
       </a>
     </div>
+</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(function () {
+        $("#productSearch").on("input", function () {
+          var q = $(this).val().toLowerCase().trim();
+
+          if (q === "") {
+            $(".product-card").show();
+            $(".search-empty").remove();
+            return;
+          }
+
+          var anyVisible = false;
+          $(".product-card").each(function () {
+            var name = $(this).find("h3").text().toLowerCase();
+            var type = $(this)
+              .find(".product-info p")
+              .first()
+              .text()
+              .toLowerCase();
+            var details = $(this).find(".desc").text().toLowerCase();
+
+            if (
+              name.indexOf(q) !== -1 ||
+              type.indexOf(q) !== -1 ||
+              details.indexOf(q) !== -1
+            ) {
+              $(this).show();
+              anyVisible = true;
+            } else {
+              $(this).hide();
+            }
+          });
+
+          $(".search-empty").remove();
+          if (!anyVisible) {
+            $(".product-grid").append(
+              '<p class="empty search-empty">No matching products.</p>',
+            );
+          }
+        });
+      });
+    </script>
   </body>
 </html>

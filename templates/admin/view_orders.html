@@ -4,14 +4,26 @@
   <head>
     <meta charset="UTF-8" />
     <title>Shop Orders</title>
+
     <link rel="stylesheet" href="/static/admin/view_orders.css" />
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   </head>
 
   <body>
     <div class="container">
       <h1 class="title">📦 Orders for {{ shop.shop_name }}</h1>
-
       <p class="subtitle">{{ shop.place }} | {{ shop.phone_no }}</p>
+
+      <!-- 🔍 SEARCH BOX -->
+      <div class="search-box">
+        <input
+          type="text"
+          id="orderSearch"
+          placeholder="Search by order id, user, product, status, date..."
+        />
+      </div>
 
       <div class="table-wrapper">
         <table class="order-table">
@@ -29,9 +41,9 @@
             </tr>
           </thead>
 
-          <tbody>
+          <tbody id="orderTable">
             {% for item in order_items %}
-            <tr>
+            <tr class="order-row">
               <td>{{ forloop.counter }}</td>
               <td>#{{ item.ORDER.id }}</td>
               <td>{{ item.ORDER.USER.username }}</td>
@@ -55,5 +67,20 @@
         ← Back to Shops
       </a>
     </div>
+
+    <!-- ✅ jQuery SEARCH SCRIPT -->
+    <script>
+      $(document).ready(function () {
+        $("#orderSearch").on("keyup", function () {
+          const value = $(this).val().toLowerCase();
+
+          $("#orderTable tr").filter(function () {
+            $(this).toggle(
+              $(this).text().toLowerCase().indexOf(value) > -1
+            );
+          });
+        });
+      });
+    </script>
   </body>
 </html>
