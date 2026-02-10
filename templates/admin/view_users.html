@@ -6,12 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>View Users</title>
 
+    <!-- existing table css -->
     <link rel="stylesheet" href="/static/admin/view_users.css" />
+    
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
 
   <body>
     <div class="container">
       <h1 class="title">👤 Registered Users</h1>
+
+      <!-- 🔍 SEARCH BOX -->
+      <div class="search-container">
+        <input
+          type="text"
+          id="userSearch"
+          placeholder="Search by username, name, email, phone..."
+          class="search-input"
+        />
+      </div>
 
       <table class="user-table">
         <thead>
@@ -26,7 +41,7 @@
           </tr>
         </thead>
 
-        <tbody>
+        <tbody id="userTable">
           {% for u in users %}
           <tr>
             <td>{{ forloop.counter }}</td>
@@ -49,5 +64,18 @@
         <a href="/myapp/admin_dashboard_get/">← Back to Dashboard</a>
       </div>
     </div>
+
+    <!-- 🔎 SEARCH SCRIPT -->
+    <script>
+      $(document).ready(function () {
+        $("#userSearch").on("keyup", function () {
+          let value = $(this).val().toLowerCase();
+
+          $("#userTable tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+          });
+        });
+      });
+    </script>
   </body>
 </html>

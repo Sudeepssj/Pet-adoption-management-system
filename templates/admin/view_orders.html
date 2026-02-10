@@ -1,5 +1,5 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -61,12 +61,13 @@
             {% endfor %}
           </tbody>
         </table>
-      </div>
-
-      <a href="/myapp/admin_view_shops_get/" class="back-btn">
-        ← Back to Shops
-      </a>
-    </div>
+        <div class="btn-div">
+          <div>
+            <a href="/myapp/admin_view_shops_get/" class="back-btn">
+              ← Back to Shops
+            </a>
+          </div>
+        </div>
 
     <!-- ✅ jQuery SEARCH SCRIPT -->
     <script>
@@ -75,9 +76,7 @@
           const value = $(this).val().toLowerCase();
 
           $("#orderTable tr").filter(function () {
-            $(this).toggle(
-              $(this).text().toLowerCase().indexOf(value) > -1
-            );
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
           });
         });
       });

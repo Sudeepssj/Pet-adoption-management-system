@@ -1,5 +1,5 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -19,6 +19,9 @@
         <li><a href="/myapp/admin_view_shops_get/">View Shops</a></li>
         <li><a href="/myapp/admin_view_users_get/">View Users</a></li>
         <li><a href="/myapp/admin_view_complaints_get/">User Complaints</a></li>
+        <li>
+          <a href="/myapp/super_admin_change_password_get/">Change Password</a>
+        </li>
 
         <li><a href="/myapp/logout/">Logout</a></li>
       </ul>
@@ -33,7 +36,7 @@
       </header>
 
       <!-- STAT CARDS -->
-      <section class="stats">
+      <!-- <section class="stats">
         <div class="stat-card sea">
           <h2>{{ total_shops }}</h2>
           <p>Total Shops</p>
@@ -48,10 +51,10 @@
           <h2>{{ pending_complaints }}</h2>
           <p>Pending Complaints</p>
         </div>
-      </section>
+      </section> -->
 
       <!-- QUICK ACTIONS -->
-      <section class="actions">
+      <!-- <section class="actions">
         <h2 class="section-title">Quick Actions</h2>
 
         <div class="action-grid">
@@ -66,7 +69,7 @@
             >📁 Complaints</a
           >
         </div>
-      </section>
+      </section> -->
     </main>
   </body>
 </html>

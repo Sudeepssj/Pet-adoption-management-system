@@ -74,3 +74,42 @@ body {
 .back-dashboard a:hover {
   background: #1f1c60;
 }
+/* SEARCH CONTAINER */
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 25px;
+}
+
+/* SEARCH INPUT */
+.search-input {
+  width: 100%;
+  max-width: 420px;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: 2px solid #d0d5e3;
+  border-radius: 8px;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+/* FOCUS EFFECT */
+.search-input:focus {
+  outline: none;
+  border-color: #2e2a7b;
+  box-shadow: 0 4px 12px rgba(46, 42, 123, 0.15);
+}
+
+/* PLACEHOLDER */
+.search-input::placeholder {
+  color: #999;
+  font-weight: 400;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .search-input {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+}

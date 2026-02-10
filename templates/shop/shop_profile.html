@@ -1,3 +1,5 @@
+{% extends "shop/shop_dashboard.html" %}
+{% block body %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -39,11 +41,10 @@
           <p><strong>PIN:</strong> {{ shop.pin }}</p>
 
           <!-- UPDATE BUTTON -->
-          <a href="/myapp/shop_edit_profile_get/" class="btn-update"
-            >Update Profile</a
-          >
+          <a href="/myapp/shop_edit_profile_get/" class="btn-update">Update Profile</a>
         </div>
       </div>
     </div>
   </body>
 </html>
+{% endblock %}

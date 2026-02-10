@@ -181,6 +181,17 @@ urlpatterns = [
 
     # logout 
     path('logout/', views.logout_get,name='logout'),
+
+    #super admin change password get method url
+    path('super_admin_change_password_get/',views.super_admin_change_password,name='super_admin_change_password'),
+
+
+    # shop change password get method url
+    path('shop_change_password_get/',views.shop_change_password,name='shop_change_password'),
+
+    # user change password get method url
+    path('user_change_password_get/',views.user_change_password,name='user_change_password'),
+
     
 
 

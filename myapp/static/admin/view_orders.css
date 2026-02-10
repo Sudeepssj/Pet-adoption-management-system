@@ -24,7 +24,7 @@ body {
 .subtitle {
   color: #555;
   margin-bottom: 20px;
-}
+} 
 
 /* SEARCH BOX */
 .search-box {
@@ -104,14 +104,18 @@ body {
   padding: 12px 22px;
   border-radius: 8px;
   font-weight: 600;
-}
+} 
 
 .back-btn:hover {
   background: #1f1c60;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(46, 42, 123, 0.3);
 }
-
+.btn-div{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+ }
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .title {

@@ -8,6 +8,8 @@ from django.contrib.auth import authenticate, login, logout
 from myapp.models import *
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
 
@@ -944,9 +946,135 @@ def logout_get(request):
     logout(request)
     return redirect('/myapp/login_get')
 
-# @login_required
-# def user_dashboard_get(request):
-#     return render(request,"user/dashboard.html")
+
+
+
+# super admin change password get method
+
+
+
+# from django.contrib.auth import update_session_auth_hash
+# from django.contrib import messages
+# from django.shortcuts import render, redirect
+
+def super_admin_change_password(request):
+
+    # ✅ allow only super admin
+    if not request.user.is_superuser:
+        return redirect('/myapp/login_get/')
+
+    if request.method == "POST":
+        old_password = request.POST.get('oldpassword')
+        new_password = request.POST.get('newpassword')
+        confirm_password = request.POST.get('confirmpassword')
+
+        user = request.user
+
+        # ❌ old password check
+        if not user.check_password(old_password):
+            messages.error(request, "Old password is incorrect")
+            return redirect('/myapp/change_password_get/')
+
+        # ❌ password mismatch
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match")
+            return redirect('/myapp/change_password_get/')
+
+        # ✅ update password
+        user.set_password(new_password)
+        user.save()
+
+        # ✅ keep user logged in
+        update_session_auth_hash(request, user)
+
+        # ✅ render SAME page, hide form
+        return render(
+            request,
+            "admin/change_password.html",
+            {
+                "password_changed": True
+            }
+        )
+
+    # GET request
+    return render(request, "admin/change_password.html")
+
+
+
+# shop admin change password get method
+
+
+def shop_change_password(request):
+
+    # ✅ allow only shop users
+    if not request.user.groups.filter(name="shop").exists():
+        return redirect('/myapp/login_get/')
+
+    if request.method == "POST":
+        old_password = request.POST.get('oldpassword')
+        new_password = request.POST.get('newpassword')
+        confirm_password = request.POST.get('confirmpassword')
+
+        user = request.user
+
+        if not user.check_password(old_password):
+            messages.error(request, "Old password is incorrect")
+            return redirect('/myapp/shop_change_password_get/')
+
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match")
+            return redirect('/myapp/shop_change_password_get/')
+
+        user.set_password(new_password)
+        user.save()
+
+        update_session_auth_hash(request, user)
+
+        return render(
+            request,
+            "shop/shop_change_password.html",
+            {"password_changed": True}
+        )
+
+    return render(request, "shop/shop_change_password.html")
+
+
+# user change password get method
+
+
+def user_change_password(request):
+
+    # ✅ allow only normal users
+    if not request.user.groups.filter(name="user").exists():
+        return redirect('/myapp/login_get/')
+
+    if request.method == "POST":
+        old_password = request.POST.get('oldpassword')
+        new_password = request.POST.get('newpassword')
+        confirm_password = request.POST.get('confirmpassword')
+
+        user = request.user
+
+        if not user.check_password(old_password):
+            messages.error(request, "Old password is incorrect")
+            return redirect('/myapp/user_change_password_get/')
+
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match")
+            return redirect('/myapp/user_change_password_get/')
+
+        user.set_password(new_password)
+        user.save()
+
+        update_session_auth_hash(request, user)
+
+        return render(
+            request,
+            "user/user_change_password.html",
+            {"password_changed": True}
+        )
+
+    return render(request, "user/user_change_password.html")
 
 
 
