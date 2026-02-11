@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.db import models
+from django.utils import timezone
 # Create your models here.
 # pet model
 
@@ -86,6 +87,16 @@ class User_complaint_table(models.Model):
     Complaint=models.TextField()
     Reply=models.TextField(default="no reply")
     
+
+
+class PasswordResetOTP(models.Model):
+    email = models.EmailField()
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        return (timezone.now() - self.created_at).seconds > 300   # 5 minutes
+
 
 
     

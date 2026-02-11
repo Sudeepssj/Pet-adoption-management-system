@@ -1,6 +1,10 @@
 from datetime import datetime
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from multiprocessing import context
-from django.http import HttpResponse
+import random
+import smtplib
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User,Group
@@ -372,6 +376,9 @@ def shop_edit_profile_post(request):
     ab.post=post
     ab.district=district
     ab.pin=pin
+
+
+    User.objects.filter(id=request.user.id).update(email=email)
     ab.save()
 
     return redirect('/myapp/shop_profile_get/')
@@ -418,6 +425,7 @@ def my_edit_profile_post(request):
     bc.email=email
     bc.phone=phone
     bc.address=address
+    User.objects.filter(id=request.user.id).update(email=email)
     bc.save()
     return redirect('/myapp/my_profile_get/')
 
@@ -1078,4 +1086,54 @@ def user_change_password(request):
 
 
 
+def user_Forgot_password(request):
+    email=request.POST['email']
+    us=User.objects.filter(email=email)
+    if us.exists():
+        try:
+            lg = User.objects.get(email=email)
+            bb = User.objects.get(id=lg.Login_id)
+            otp = random.randint(00000000, 99999999)
+            # bb.set_password(str(password))
+            # bb.save()
+
+            PasswordResetOTP.objects.create(
+                email=lg.email,
+                otp=otp,
+                created_at=datetime.now()
+            )
+
+            sender_email = "childmissing01@gmail.com"
+            sender_password = "jwyo jdvt tiws zvky"
+            subject = "Forget Password From SignSpeak"
+
+            body = f"Your New Password Is ({otp}).Please Change Password After Login."
+
+            msg = MIMEMultipart()
+
+            msg['From'] = sender_email
+
+            msg['To'] = email
+
+            msg['Subject'] = subject
+
+            msg.attach(MIMEText(body, 'plain'))
+
+            server = smtplib.SMTP(host="smtp.gmail.com", port=587)
+
+            server.starttls()
+
+            server.login(sender_email, sender_password)
+
+            server.sendmail(sender_email, email, msg.as_string())
+
+            server.quit()
+
+            print(f"Email sent successfully to {email}")
+            return JsonResponse({"status":"ok"})
+
+        except Exception as e:
+
+            print(f"Error sending email: {e}")
+            return JsonResponse({"status":"no"})
 

@@ -192,6 +192,9 @@ urlpatterns = [
     # user change password get method url
     path('user_change_password_get/',views.user_change_password,name='user_change_password'),
 
+    # forgot password get method url
+    path('user_forgot_password_get/',views.user_Forgot_password,name='user_forgot_password'),
+
     
 
 
