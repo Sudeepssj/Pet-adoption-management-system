@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,22 +11,22 @@
     <div class="box">
       <h2>Forgot Password</h2>
 
-      <form id="forgotForm">
+      <form id="forgotForm" method="post" action="/myapp/forgot_pass_get/">
+        {% csrf_token %}
         <input
           type="text"
           id="email"
           placeholder="Enter your registered email"
+          name="email"
         />
         <p id="emailError" class="error"></p>
 
-        <button type="submit">Send Reset Link</button>
+        <button type="submit">Send OTP </button>
 
         <p class="back">Back to <a href="/myapp/login_get/">Login</a></p>
 
         <p id="messageBox" class="message"></p>
       </form>
     </div>
-    </body>
-
-    
+  </body>
 </html>

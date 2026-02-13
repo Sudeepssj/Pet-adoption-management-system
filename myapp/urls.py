@@ -16,8 +16,7 @@ urlpatterns = [
     # login page get method url
     path('login_get/', views.login_get),
 
-    # forgot pass get method url
-    path('forgot_pass_get/', views.forgot_pass_get),
+
 
     # change pass get method url
     path('change_pass_get/', views.change_pass_get),
@@ -193,9 +192,17 @@ urlpatterns = [
     path('user_change_password_get/',views.user_change_password,name='user_change_password'),
 
     # forgot password get method url
-    path('user_forgot_password_get/',views.user_Forgot_password,name='user_forgot_password'),
-
+    # path('user_forgot_password/',views.user_forgot_password)
     
+    # forgot pass get method url
+    path('forgot_pass_get/', views.forgot_pass_get),
+
+    path('verify_otp/', views.verify_otp),
+
+    path('reset_password_post/', views.reset_password_post),
+
+    path('verify_otp_get/', views.verify_otp_get),
+    path('reset_password_get/', views.reset_password_get),
 
 
 ]

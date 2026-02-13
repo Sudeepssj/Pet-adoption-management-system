@@ -15,6 +15,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 
+
+import random
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import PasswordResetOTP
+from django.utils import timezone
+
+
 # Create your views here.
 
 # admin dashboard get method
@@ -75,8 +85,7 @@ def login_post(request):
 
 
 # forgot password get method
-def forgot_pass_get(request):
-    return render(request,"user/forgot.html")
+
 
 # change password get method
 def change_pass_get(request):
@@ -1086,54 +1095,151 @@ def user_change_password(request):
 
 
 
-def user_Forgot_password(request):
-    email=request.POST['email']
-    us=User.objects.filter(email=email)
-    if us.exists():
+# def user_Forgot_password(request):
+#     email=request.POST['email']
+#     us=User.objects.filter(email=email)
+#     if us.exists():
+#         try:
+#             lg = User.objects.get(email=email)
+#             bb = User.objects.get(id=lg.Login_id)
+#             otp = random.randint(00000000, 99999999)
+#             # bb.set_password(str(password))
+#             # bb.save()
+
+#             PasswordResetOTP.objects.create(
+#                 email=lg.email,
+#                 otp=otp,
+#                 created_at=datetime.now()
+#             )
+
+#             sender_email = "childmissing01@gmail.com"
+#             sender_password = "jwyo jdvt tiws zvky"
+#             subject = "Forget Password From SignSpeak"
+
+#             body = f"Your New Password Is ({otp}).Please Change Password After Login."
+
+#             msg = MIMEMultipart()
+
+#             msg['From'] = sender_email
+
+#             msg['To'] = email
+
+#             msg['Subject'] = subject
+
+#             msg.attach(MIMEText(body, 'plain'))
+
+#             server = smtplib.SMTP(host="smtp.gmail.com", port=587)
+
+#             server.starttls()
+
+#             server.login(sender_email, sender_password)
+
+#             server.sendmail(sender_email, email, msg.as_string())
+
+#             server.quit()
+
+#             print(f"Email sent successfully to {email}")
+#             return JsonResponse({"status":"ok"})
+
+#         except Exception as e:
+
+#             print(f"Error sending email: {e}")
+#             return JsonResponse({"status":"no"})
+
+
+def verify_otp_get(request):
+   
+    return render(request,"user/verify_otp.html")
+
+
+def verify_otp(request):
+    if request.method == "POST":
+        entered_otp = request.POST['otp']
+        print(entered_otp)
+        email = request.session.get('reset_email')
+        print(email)
+
+
+        otp_record = PasswordResetOTP.objects.filter(email=email).last()
+        print(otp_record)
+
+
+        if otp_record and otp_record.otp == entered_otp:
+            # Check expiry (5 minutes)
+            if (timezone.now() - otp_record.created_at).total_seconds() > 300:
+
+                messages.error(request, "OTP Expired")
+                return redirect('/myapp/forgot_password/')
+
+            return redirect('/myapp/reset_password_get/')
+        else:
+            messages.error(request, "Invalid OTP")
+
+    return render(request, "user/verify_otp.html")   
+
+def reset_password_get(request):
+    return render(request,"user/reset_password.html")
+
+
+def reset_password_post(request):
+    if request.method == "POST":
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        email = request.session.get("reset_email")
+
+        if new_password != confirm_password:
+            return render(request, "user/reset_password.html",
+                          {"error": "Passwords do not match"})
+
         try:
-            lg = User.objects.get(email=email)
-            bb = User.objects.get(id=lg.Login_id)
-            otp = random.randint(00000000, 99999999)
-            # bb.set_password(str(password))
-            # bb.save()
+            user = User.objects.get(email=email)
+            user.set_password(new_password)
+            user.save()
 
-            PasswordResetOTP.objects.create(
-                email=lg.email,
-                otp=otp,
-                created_at=datetime.now()
-            )
+            return redirect("/myapp/login_get/")
+        except:
+            return render(request, "user/reset_password.html",
+                          {"error": "Something went wrong"})
 
-            sender_email = "childmissing01@gmail.com"
-            sender_password = "jwyo jdvt tiws zvky"
-            subject = "Forget Password From SignSpeak"
+    return redirect("/myapp/login_get/")
 
-            body = f"Your New Password Is ({otp}).Please Change Password After Login."
 
-            msg = MIMEMultipart()
 
-            msg['From'] = sender_email
+import random
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from .models import PasswordResetOTP
 
-            msg['To'] = email
 
-            msg['Subject'] = subject
+# def forgot_pass_get(request):
+#     return render(request,"user/forgot.html")
+def forgot_pass_get(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
 
-            msg.attach(MIMEText(body, 'plain'))
+        if not User.objects.filter(email=email).exists():
+            messages.error(request, "Email not found")
+            return render(request, "user/forgot.html")
 
-            server = smtplib.SMTP(host="smtp.gmail.com", port=587)
+        otp = str(random.randint(100000, 999999))
 
-            server.starttls()
+        PasswordResetOTP.objects.create(
+            email=email,
+            otp=otp
+        )
 
-            server.login(sender_email, sender_password)
+        send_mail(
+            subject="Password Reset OTP",
+            message=f"Your OTP is {otp}. It is valid for 5 minutes.",
+            from_email=None,
+            recipient_list=[email],
+        )
 
-            server.sendmail(sender_email, email, msg.as_string())
+        # ✅ FIXED
+        request.session['reset_email'] = email
 
-            server.quit()
+        return render(request, "user/verify_otp.html")
 
-            print(f"Email sent successfully to {email}")
-            return JsonResponse({"status":"ok"})
-
-        except Exception as e:
-
-            print(f"Error sending email: {e}")
-            return JsonResponse({"status":"no"})
-
+    return render(request, "user/forgot.html")
