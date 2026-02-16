@@ -34,9 +34,42 @@
         <h1>Dashboard Overview</h1>
         <p>Welcome, Super Admin</p>
       </header>
-      {% block body %}
-      {% endblock %}
 
-        </main>
+      <!-- STAT CARDS -->
+      <section class="stats">
+        <div class="stat-card sea">
+          <h2>{{ total_shops }}</h2>
+          <p>Total Shops</p>
+        </div>
+
+        <div class="stat-card sky">
+          <h2>{{ total_users }}</h2>
+          <p>Total Users</p>
+        </div>
+
+        <div class="stat-card sky">
+          <h2>{{ pending_complaints }}</h2>
+          <p>Pending Complaints</p>
+        </div>
+      </section>
+
+      <!-- QUICK ACTIONS -->
+      <section class="actions">
+        <h2 class="section-title">Quick Actions</h2>
+
+        <div class="action-grid">
+          <a href="/myapp/admin_view_shops_get/" class="action-card"
+            >👤 View Shops</a
+          >
+          <a href="/myapp/admin_view_users_get/" class="action-card"
+            >🏪 View Users</a
+          >
+
+          <a href="/myapp/admin_view_complaints_get/" class="action-card"
+            >📁 Complaints</a
+          >
+        </div>
+      </section>
+    </main>
   </body>
 </html>

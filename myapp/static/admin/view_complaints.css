@@ -11,13 +11,8 @@ body {
 }
 
 /* PAGE TITLE */
-h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #2e2a7b;
-  font-size: 26px;
-  font-weight: 700;
-}
+
+
 
 /* SEARCH CONTAINER */
 .search-container {
@@ -59,7 +54,7 @@ h2 {
 table {
   width: 100%;
   max-width: 1100px;
-  margin: auto;
+  /* margin: auto; */
   border-collapse: collapse;
   background: #ffffff;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);

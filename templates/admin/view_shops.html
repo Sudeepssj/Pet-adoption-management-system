@@ -1,7 +1,7 @@
 {% extends "admin/admin_dashboard.html" %}
 {% block body %}
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -66,10 +66,7 @@
             <a href="/myapp/admin_view_pets_get/{{ shop.id }}/" class="btn">
               View Pets
             </a>
-            <a
-              href="/myapp/admin_view_products_get/{{ shop.id }}/"
-              class="btn"
-            >
+            <a href="/myapp/admin_view_products_get/{{ shop.id }}/" class="btn">
               View Products
             </a>
             <a
@@ -86,11 +83,11 @@
       </div>
     </div>
     <div class="btn-div">
-    <div class="back-dashboard">
+      <div class="back-dashboard">
         <p>
           <a href="/myapp/admin_dashboard_get/">Back to Dashboard</a>
         </p>
-    </div>
+      </div>
     </div>
 
     <!-- ✅ jQuery SEARCH SCRIPT -->
@@ -100,9 +97,7 @@
           const value = $(this).val().toLowerCase();
 
           $(".shop-item").filter(function () {
-            $(this).toggle(
-              $(this).text().toLowerCase().indexOf(value) > -1
-            );
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
           });
         });
       });

@@ -9,7 +9,8 @@
 /* PAGE BACKGROUND */
 body {
   min-height: 100vh;
-  background: linear-gradient(135deg, #e0f2fe, #ede9fe);
+  background-color: white;
+  /* background: linear-gradient(135deg, #e0f2fe, #ede9fe); */
   display: flex;
   align-items: center;
   justify-content: center;

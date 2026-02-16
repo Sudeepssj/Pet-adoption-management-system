@@ -41,7 +41,7 @@ def admin_dashboard_get(request):
             'total_users': total_users,
             'pending_complaints': pending_complaints,
         }
-        return render(request,"admin/admin_dashboard.html", context)
+        return render(request,"admin/admin_dashboard1.html", context)
     else:
         return redirect('/myapp/login_get/')
     # return render(request,"admin/admin_dashboard.html", context)
@@ -120,7 +120,7 @@ def edit_pet_get(request):
 def user_dashboard_get(request):
     user=request.user
     if user.groups.filter(name="user").exists():
-        return render(request,"user/dashboard.html")
+        return render(request,"user/dashboard1.html")
     else:
         return redirect('/myapp/login_get/')    
 
@@ -206,7 +206,7 @@ def user_signup_get(request):
 def shop_dashboard_get(request):
     user=request.user
     if user.groups.filter(name="shop").exists():
-        return render(request,"shop/shop_dashboard.html")
+        return render(request,"shop/shop_dashboard1.html")
     else:
         return redirect('/myapp/login_get/')
 # shop view pets get method
