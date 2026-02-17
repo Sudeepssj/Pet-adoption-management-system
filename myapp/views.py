@@ -9,6 +9,7 @@ from django.shortcuts import redirect, render
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User,Group
 from django.contrib.auth import authenticate, login, logout
+from miniproject import settings
 from myapp.models import *
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
@@ -1233,7 +1234,7 @@ def forgot_pass_get(request):
         send_mail(
             subject="Password Reset OTP",
             message=f"Your OTP is {otp}. It is valid for 5 minutes.",
-            from_email=None,
+            from_email=settings.EMAIL_HOST_USER,
             recipient_list=[email],
         )
 

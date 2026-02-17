@@ -15,7 +15,7 @@ body {
 h2 {
   text-align: center;
   margin-bottom: 25px;
-  color: #2e2a7b;
+  color:#5a00ff;
   font-size: 26px;
   font-weight: 700;
 }
@@ -35,7 +35,7 @@ table {
 
 /* TABLE HEADER */
 table th {
-  background: #2e2a7b;
+  background: #5a00ff;
   color: #ffffff;
   padding: 14px;
   text-align: left;
@@ -91,25 +91,25 @@ table td[colspan] {
 }
 
 .btn-primary {
-  background: #2e2a7b;
+  background: #5a00ff;
   color: white;
   box-shadow: 0 4px 12px rgba(46, 42, 123, 0.2);
 }
 
 .btn-primary:hover {
-  background: #1f1c60;
+  background: #5a00ff;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(46, 42, 123, 0.3);
 }
 
 .btn-secondary {
-  background: #2e2a7b;
+  background: #5a00ff;
   color: white;
   box-shadow: 0 4px 12px rgba(46, 42, 123, 0.2);
 }
 
 .btn-secondary:hover {
-  background: #1f1c60;
+  background: #5a00ff;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(46, 42, 123, 0.3);
 }
@@ -127,21 +127,20 @@ div {
 div a {
   display: inline-block;
   padding: 12px 28px;
-  background: #2e2a7b;
   color: white;
   text-decoration: none;
   border-radius: 8px;
   font-size: 15px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(46, 42, 123, 0.2);
+  
   text-transform: capitalize;
 }
 
 div a:hover {
-  background: #1f1c60;
+  
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(46, 42, 123, 0.3);
+  
 }
 
 div a:active {
