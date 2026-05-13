@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>User Dashboard</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="/static/user/dd.css" />
+  </head>
+
+  <body>
+    <div class="app">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-logo">🐾</div>
+          <div class="brand-text">Pet Adoption</div>
+        </div>
+
+        <nav class="side-nav">
+          <a href="/myapp/user_dashboard_get/" class="active">Dashboard</a>
+          <a href="/myapp/user_view_pets_get/#scroll">Browse Pets</a>
+          <a href="/myapp/user_view_products_get/">Browse Products</a>
+          <a href="/myapp/view_cart_get/">View Cart</a>
+          <a href="/myapp/my_profile_get/">My Profile</a>
+          <a href="/myapp/order_main_status_get/">Order status</a>
+          <a href="/myapp/user_complaint_get/">Complaints</a>
+          <a href="/myapp/user_change_password_get/">Change Password</a>
+          <a href="/myapp/logout/">Logout</a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <small>Logged in as</small>
+          <div class="sidebar-user">
+            <div class="sidebar-avatar-fallback">
+              {{ user.username|slice:":1" }}
+            </div>
+            <div class="sidebar-username">{{ user.username }}</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main">
+        <!-- TOPBAR -->
+        <header class="topbar">
+          <div>
+            <h1 class="hero-title">Welcome, {{ user.username }} 👋</h1>
+            <p class="hero-sub">
+              Find pets, manage requests, and track your adoptions.
+            </p>
+          </div>
+
+          <div class="profile-mini">
+            <div class="avatar-fallback">{{ user.username|slice:":1" }}</div>
+            <div class="profile-name">{{ user.username }}</div>
+          </div>
+        </header>
+
+        <!-- HERO SECTION -->
+
+        <section class="hero-section">
+          <div class="hero-container">
+            <div class="hero-text">
+              <h1>Find Your New <span class="highlight">Best Friend</span></h1>
+              <p>
+                Browse through our selection of loving pets looking for a
+                forever home.
+              </p>
+            </div>
+
+            <div class="hero-image">
+              <img src="/static/images/dog&cat.jpeg" alt="Dog and Cat" />
+            </div>
+          </div>
+        </section>
+
+        <!-- QUICK ACTIONS -->
+        <section class="actions">
+          <a class="action-card" href="/myapp/user_view_pets_get/">
+            <div class="icon">🐶</div>
+            <div>
+              <div class="action-title">View Pets</div>
+              <div class="action-sub">See all available pets</div>
+            </div>
+          </a>
+
+          <a class="action-card" href="/myapp/user_view_products_get/">
+            <div class="icon">🛍️</div>
+            <div>
+              <div class="action-title">View Products</div>
+              <div class="action-sub">Browse pet products</div>
+            </div>
+          </a>
+
+          <a class="action-card" href="/myapp/view_cart_get/">
+            <div class="icon">🛒</div>
+            <div>
+              <div class="action-title">View Cart</div>
+              <div class="action-sub">Check your shopping cart</div>
+            </div>
+          </a>
+        </section>
+
+        <div id="scroll">{% block body %}{% endblock %}</div>
+      </main>
+    </div>
+  </body>
+</html>
